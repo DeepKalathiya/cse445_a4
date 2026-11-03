@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  NationalParks.xsd - schema for the national park directory (CSE 445 Assignment 4, Q1.1)
+
+  Structure (Figure 1), elements in left-to-right order:
+    NationalParks
+      NationalPark (1..n)            @Rating          optional
+        Name                         string
+        Phone (1..n)                 string
+        Address                      @NearestAirport  required
+          Number                     int
+          Street                     string
+          City                       string
+          State                      string
+          Zip                        string (keeps leading zeros, e.g. 04609)
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <!-- Root element: the directory holds one or more national parks -->
+  <xs:element name="NationalParks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="NationalPark" type="NationalParkType" minOccurs="1" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- One national park: Name, then one or more Phone numbers, then the Address -->
+  <xs:complexType name="NationalParkType">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="Phone" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="Address" type="AddressType" />
+    </xs:sequence>
+    <!-- Optional (implied) attribute: present on some parks only -->
+    <xs:attribute name="Rating" type="xs:decimal" use="optional" />
+  </xs:complexType>
+
+  <!-- Street address of the park, with the nearest airport as a required attribute -->
+  <xs:complexType name="AddressType">
+    <xs:sequence>
+      <xs:element name="Number" type="xs:int" />
+      <xs:element name="Street" type="xs:string" />
+      <xs:element name="City" type="xs:string" />
+      <xs:element name="State" type="xs:string" />
+      <xs:element name="Zip" type="xs:string" />
+    </xs:sequence>
+    <!-- Required attribute: every Address must name its nearest airport -->
+    <xs:attribute name="NearestAirport" type="xs:string" use="required" />
+  </xs:complexType>
+
+</xs:schema>
